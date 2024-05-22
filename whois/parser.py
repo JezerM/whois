@@ -97,6 +97,7 @@ class WhoisEntry(dict):
     _regex = {
         "domain_name": r"Domain Name: *(.+)",
         "registrar": r"Registrar: *(.+)",
+        "registrar_url": r"Registrar URL: *(.+)",
         "whois_server": r"Whois Server: *(.+)",
         "referral_url": r"Referral URL: *(.+)",  # http url of whois_server
         "updated_date": r"Updated Date: *(.+)",
@@ -141,7 +142,7 @@ class WhoisEntry(dict):
                     matches = data if isinstance(data, tuple) else [data]
                     for value in matches:
                         value = self._preprocess(attr, value)
-                        if value and value not in values:
+                        if value and str(value).lower() not in [str(v).lower() for v in values]:
                             # avoid duplicates
                             values.append(value)
                 if values and attr in ("registrar", "whois_server", "referral_url"):
